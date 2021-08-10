@@ -1,0 +1,17 @@
+.TodoItem {
+   display: flex;
+   flex-direction: row;
+   align-content: center;
+   justify-content: center;
+}
+.TodoList{
+   width: 100vw;
+   height: 70vh;
+   background-color: rgba(10,64,55,0.09)  ;
+   border-radius: 5px;
+   overflow-y: scroll;
+}
+
+.done {
+   text-decoration: line-through;
+}
