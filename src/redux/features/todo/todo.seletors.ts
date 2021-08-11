@@ -1,3 +1,3 @@
-import { RootTodoState } from '../../index'
+import { RootState } from '../../index'
 
-export const selectTodos = (state: RootTodoState) => state.todos.todos
+export const selectTodos = (state: RootState) => state.todos.todos

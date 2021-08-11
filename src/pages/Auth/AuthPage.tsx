@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import {Button, CircularProgress } from '@material-ui/core'
 import { useDispatch } from 'react-redux'
-import { loginUser, registerUser } from '../redux/features/auth/auth.slice'
+import { loginUser, registerUser } from '../../redux/features/auth/auth.slice'
 
 const Auth = () => {
    const [form, setForm] = useState({

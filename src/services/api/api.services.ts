@@ -9,8 +9,11 @@ class ApiServices {
    public async getLogin(body: {
       email: string
       password: string
-   }): Promise<string> {
+   }){
       return axios.post(`${this._Api_URL}/auth/login`, body).then((res) => {
+
+         const token = res.data.token
+         localStorage.setItem('token', token)
          return res.data
       })
    }
