@@ -1,17 +1,21 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, Dispatch } from '@reduxjs/toolkit'
 import { Todo } from '../../todos.type'
 import { TodoState } from './todo.types'
-import { addTodoAction } from './todo.actions'
 import LocalStorageService from '../../../services/localStorageService/local.storage.service'
+import ApiTodoService from '../../../services/api/api.todo.service'
+import { registerError } from '../auth/auth.slice'
+
 const todoSlice = createSlice({
    name: 'todos',
    initialState: {
-      todos: LocalStorageService.getTodos(),
+      todos: [],
    },
    reducers: {
-      addTodo: addTodoAction,
-
-      toggleComplete: function (state: TodoState, action) {
+      //addTodo: addTodoAction,
+      addTodo(state: TodoState, action) {
+         state.todos.push(action.payload)
+      },
+      toggleComplete(state: TodoState, action) {
          const toggledTodo: Todo | undefined = state.todos.find(
             (todo) => todo.id === action.payload.id
          )
@@ -41,3 +45,17 @@ export const { addTodo, toggleComplete, removeTodo, changeTodo } =
    todoSlice.actions
 
 export default todoSlice.reducer
+
+export const addTodos = (data: { title: string; token: string }) => {
+   return async (dispatch: Dispatch): Promise<void> => {
+      try {
+         const res = await ApiTodoService.createTodo(data)
+         console.log(res)
+         if (res === undefined) {
+            dispatch(registerError('Error'))
+         } else {
+            dispatch(addTodo(res))
+         }
+      } catch (e: any) {}
+   }
+}

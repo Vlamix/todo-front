@@ -1,98 +1,91 @@
 import { createSlice, Dispatch } from '@reduxjs/toolkit'
-import ApiServices from '../../../services/api/api.services'
+import ApiAuthServices from '../../../services/api/api.auth.services'
 import LocalStorageService from '../../../services/localStorageService/local.storage.service'
 
 export interface LoginData {
-    email: string
-    password: string
+   email: string
+   password: string
 }
 
 interface AuthState {
-    user?: any
-    token?: string | null
-    error?: Error
-    isLoading: boolean
-    note: string | null
+   user?: any
+   token?: string | null
+   error?: Error
+   isLoading: boolean
+   note: string | null
 }
 
 const IS_SERVER = typeof window === 'undefined'
 
 const initialState: AuthState = {
-    isLoading: false,
-    token: !IS_SERVER ? localStorage.getItem('token') : '',
-    note: null,
+   isLoading: false,
+   token: !IS_SERVER ? localStorage.getItem('token') : '',
+   note: null,
 }
 
 export const AuthSlice = createSlice({
-    name: 'auth',
-    initialState,
-    reducers: {
-        logout: (state: AuthState) => {
-            LocalStorageService.delete()
-            state.isLoading = false
-            state.token = null
-        },
-        loginSuccess: (state: AuthState, action) => {
-            LocalStorageService.setAuth(action.payload)
-            LocalStorageService.set(action.payload)
-            state.isLoading = false
-            state.token = action.payload
-        },
-        setNotification: (state: AuthState, action) => {
-            state.note = action.payload
-        },
-        clearNotification: (state: AuthState) => {
-            state.note = null
-        },
-        registerError: (state: AuthState, action) => {
-            state.error = action.payload
-        },
-    },
+   name: 'auth',
+   initialState,
+   reducers: {
+      logout: (state: AuthState) => {
+         LocalStorageService.deleteToken()
+         state.isLoading = false
+         state.token = null
+      },
+      loginSuccess: (state: AuthState, action) => {
+         LocalStorageService.setToken(action.payload)
+         state.isLoading = false
+         state.token = action.payload
+      },
+      setNotification: (state: AuthState, action) => {
+         state.note = action.payload
+      },
+      clearNotification: (state: AuthState) => {
+         state.note = null
+      },
+      registerError: (state: AuthState, action) => {
+         state.error = action.payload
+      },
+   },
 })
 
-export const {
-    logout,
-    loginSuccess,
-    setNotification,
-    clearNotification,
-    registerError,
-} = AuthSlice.actions
+export const { logout, loginSuccess, setNotification, registerError } =
+   AuthSlice.actions
 
 export const logoutUser = () => {
-    return (dispatch: Dispatch) => {
-        dispatch(logout())
-    }
+   return (dispatch: Dispatch) => {
+      dispatch(logout())
+   }
 }
 
 export const loginUser = (data: LoginData) => {
-    return async (dispatch: Dispatch) => {
-        try {
-            const res = await ApiServices.getLogin(data)
-            if (res === undefined) {
-                dispatch(logout())
-                dispatch(setNotification('Incorrect data'))
-                dispatch(registerError('Error'))
-            } else if (res !== undefined) {
-                dispatch(loginSuccess(res))
-            }
-        } catch (e) {}
-    }
+   return async (dispatch: Dispatch) => {
+      try {
+         const res = await ApiAuthServices.getLogin(data)
+         if (res === undefined) {
+            dispatch(logout())
+            dispatch(setNotification('Incorrect data'))
+            dispatch(registerError('Error'))
+         } else {
+            dispatch(loginSuccess(res))
+         }
+      } catch (e) {}
+   }
 }
 
 export const registerUser = (data: LoginData) => {
-    return async (dispatch: Dispatch) => {
-        try {
-            const res = await ApiServices.getRegistration(data)
-            console.log(res)
-            if (res === undefined) {
-                dispatch(logout())
-                // dispatch(setNotification('Incorrect data'))
-                dispatch(registerError('Error'))
-            } else {
-                dispatch(loginSuccess(res))
-            }
-        } catch (e: any) {}
-    }
+   return async (dispatch: Dispatch) => {
+      try {
+         const res = await ApiAuthServices.getRegistration(data)
+         console.log(res)
+         if (res === undefined) {
+            dispatch(logout())
+            dispatch(registerError('Error'))
+         } else {
+            dispatch(loginSuccess(res))
+         }
+      } catch (e: any) {}
+   }
 }
 
 export default AuthSlice.reducer

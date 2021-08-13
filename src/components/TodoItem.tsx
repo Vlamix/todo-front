@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button } from '@material-ui/core'
+import { Button, Checkbox, Grid } from '@material-ui/core'
 import { useDispatch } from 'react-redux'
 import './class.css'
 import { Todo } from '../redux/todos.type'
@@ -25,17 +25,28 @@ const TodoItem: React.FC<ModalInterface> = (props) => {
    }
 
    return (
-      <li>
-         <div className={'TodoItem'}>
-            <input
-               type="checkbox"
-               onChange={() => {
-                  handleToggle()
-               }}
-               checked={props.todo.completed}
-            />
-            <span className={classes.join(' ')}>{props.todo.title}</span>
+      <Grid
+         className={'TodoItem'}
+         container
+         justifyContent={'space-around'}
+         alignItems={'center'}
+         xs={12}
+         md={8}
+      >
+         <Checkbox
+            onChange={() => {
+               console.log('some')
+               handleToggle()
+            }}
+            color="primary"
+            inputProps={{ 'aria-label': 'secondary checkbox' }}
+         />
+         <div className={classes.join(' ')}>{props.todo.title}</div>
+
+         <Grid container xs={4} md={3} justifyContent={'space-between'}>
             <Button
+               variant={'contained'}
+               color={'primary'}
                onClick={() => {
                   props.setOpen()
                   props.setIndex(props.todo.id)
@@ -43,9 +54,15 @@ const TodoItem: React.FC<ModalInterface> = (props) => {
             >
                Change
             </Button>
-            <Button onClick={removeThis}>Remove</Button>
-         </div>
-      </li>
+            <Button
+               variant={'contained'}
+               color={'default'}
+               onClick={removeThis}
+            >
+               Remove
+            </Button>
+         </Grid>
+      </Grid>
    )
 }
 
