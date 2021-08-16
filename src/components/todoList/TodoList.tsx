@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import TodoItem from '../todoItem/TodoItem'
 import { Button, TextField } from '@material-ui/core'
 import { useDispatch, useSelector } from 'react-redux'
-import { addTodos, getAll } from '../../redux/features/todo/todoSlice'
+import { addTodo, getAll } from '../../redux/features/todo/todoSlice'
 import { Todo } from '../../redux/todos.type'
 import { Modal } from '../modal/Modal'
 import { RootState } from '../../redux'
@@ -34,7 +34,7 @@ const TodoList = () => {
          if (!token) {
             throw new Error('lol')
          }
-         dispatch(addTodos({ title: value, token: token }))
+         dispatch(addTodo({ title: value, token: token }))
       }
       setValue('')
    }

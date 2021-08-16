@@ -6,7 +6,7 @@ import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import { useDispatch } from 'react-redux'
-import { changeOneTodo } from '../../redux/features/todo/todoSlice'
+import { changeTodo } from '../../redux/features/todo/todoSlice'
 
 interface ModalProps {
    open: boolean
@@ -23,7 +23,7 @@ export const Modal: React.FC<ModalProps> = (props) => {
       if (changeText.trim().length) {
          console.log(props.index)
          if (index !== null) {
-            dispatch(changeOneTodo(index, { title: changeText }))
+            dispatch(changeTodo({ index: index, body: { title: changeText } }))
          }
       }
       setChangeText('')

@@ -1,8 +1,8 @@
 import { createSlice, Dispatch } from '@reduxjs/toolkit'
 import { TodoState } from './todo.types'
 import ApiTodoService from '../../../services/api/api.todo.service'
-import { AppDispatch } from '../../index'
 import { Todo } from '../../todos.type'
+import { AddDto, ChangeDto, RemoveDto, ToggleDto } from './dto/todo.dto'
 
 const todoSlice = createSlice({
    name: 'todos',
@@ -10,13 +10,13 @@ const todoSlice = createSlice({
       todos: [],
    },
    reducers: {
-      addTodo(state: TodoState, action) {
+      addTodoSuccess(state: TodoState, action) {
          state.todos.push(action.payload)
       },
-      getAllTodos(state: TodoState, action) {
+      getAllSuccess(state: TodoState, action) {
          state.todos = action.payload
       },
-      removeTodo(state: TodoState, action) {
+      removeTodoSuccess(state: TodoState, action) {
          console.log(action.payload)
          state.todos.splice(action.payload, 1)
       },
@@ -35,16 +35,16 @@ const todoSlice = createSlice({
 })
 
 export const {
-   addTodo,
-   removeTodo,
+   addTodoSuccess,
+   removeTodoSuccess,
    successToggle,
-   getAllTodos,
+   getAllSuccess,
    successChange,
 } = todoSlice.actions
 
 export default todoSlice.reducer
 
-export const addTodos = (data: { title: string; token: string }) => {
+export const addTodo = (data: AddDto) => {
    return async (dispatch: Dispatch): Promise<void> => {
       try {
          const res = await ApiTodoService.createTodo(data)
@@ -52,21 +52,17 @@ export const addTodos = (data: { title: string; token: string }) => {
          if (res === undefined) {
             console.log('some error')
          } else {
-            dispatch(addTodo(res))
+            dispatch(addTodoSuccess({ res: res }))
          }
       } catch (e: any) {}
    }
 }
 
-export const removeTodos = (id: number, index: number) => {
+export const removeTodo = (data: RemoveDto) => {
    return async (dispatch: Dispatch): Promise<void> => {
       try {
-         const res = await ApiTodoService.delete(id)
-         if (res === undefined) {
-            console.log('some error')
-         } else {
-            dispatch(removeTodo(index))
-         }
+         await ApiTodoService.delete(data.id)
+         dispatch(removeTodoSuccess({ index: data.index }))
       } catch (e) {}
    }
 }
@@ -78,30 +74,28 @@ export const getAll = () => {
          if (res === undefined) {
             console.log('some error')
          } else {
-            dispatch(getAllTodos(res))
+            dispatch(getAllSuccess({ res: res }))
          }
       } catch (e) {}
    }
 }
 
-export const changeOneTodo = (index: number, body: { title: string }) => {
+export const changeTodo = (data: ChangeDto) => {
    return async (dispatch: Dispatch) => {
       try {
-         await ApiTodoService.update(index, body)
-         dispatch(successChange({ index, title: body.title }))
+         await ApiTodoService.update(data.index, data.body)
+         dispatch(successChange({ index: data.index, title: data.body.title }))
       } catch (e) {}
    }
 }
 
-export const changeToggleTodo = (
-   index: number,
-   body: { isChecked: boolean },
-   id: number
-) => {
+export const changeToggleTodo = (data: ToggleDto) => {
    return async (dispatch: Dispatch) => {
       try {
-         await ApiTodoService.update(id, body)
-         dispatch(successToggle({ index, isChecked: body.isChecked }))
+         await ApiTodoService.update(data.id, data.body)
+         dispatch(
+            successToggle({ index: data.index, isChecked: data.body.isChecked })
+         )
       } catch (e) {}
    }
 }

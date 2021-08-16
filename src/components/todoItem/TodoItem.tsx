@@ -4,9 +4,8 @@ import { useDispatch } from 'react-redux'
 import './styles.module..css'
 import { Todo } from '../../redux/todos.type'
 import {
-   changeOneTodo,
    changeToggleTodo,
-   removeTodos,
+   removeTodo,
 } from '../../redux/features/todo/todoSlice'
 
 interface ModalInterface {
@@ -24,15 +23,15 @@ const TodoItem: React.FC<ModalInterface> = (props) => {
    }
    const handleToggle = () => {
       dispatch(
-         changeToggleTodo(
-            props.index,
-            { isChecked: !props.todo.isChecked },
-            props.todo.id
-         )
+         changeToggleTodo({
+            index: props.index,
+            body: { isChecked: !props.todo.isChecked },
+            id: props.todo.id,
+         })
       )
    }
    const removeThis = () => {
-      dispatch(removeTodos(props.todo.id, props.index))
+      dispatch(removeTodo({ id: props.todo.id, index: props.index }))
    }
 
    return (
