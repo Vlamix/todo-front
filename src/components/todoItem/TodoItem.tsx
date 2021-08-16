@@ -1,27 +1,38 @@
 import React from 'react'
 import { Button, Checkbox, Grid } from '@material-ui/core'
 import { useDispatch } from 'react-redux'
-import './class.css'
-import { Todo } from '../redux/todos.type'
-import { removeTodo, toggleComplete } from '../redux/features/todo/todoSlice'
+import './styles.module..css'
+import { Todo } from '../../redux/todos.type'
+import {
+   changeOneTodo,
+   changeToggleTodo,
+   removeTodos,
+} from '../../redux/features/todo/todoSlice'
 
 interface ModalInterface {
    setOpen: () => void
    todo: Todo
-   setIndex: (id: string) => void
+   setIndex: (id: number) => void
+   index: number
 }
 
 const TodoItem: React.FC<ModalInterface> = (props) => {
    const dispatch = useDispatch()
    const classes = []
-   if (props.todo.completed) {
+   if (props.todo.isChecked) {
       classes.push('done')
    }
    const handleToggle = () => {
-      dispatch(toggleComplete(props.todo))
+      dispatch(
+         changeToggleTodo(
+            props.index,
+            { isChecked: !props.todo.isChecked },
+            props.todo.id
+         )
+      )
    }
    const removeThis = () => {
-      dispatch(removeTodo(props.todo.id))
+      dispatch(removeTodos(props.todo.id, props.index))
    }
 
    return (
@@ -34,12 +45,10 @@ const TodoItem: React.FC<ModalInterface> = (props) => {
          md={8}
       >
          <Checkbox
-            onChange={() => {
-               console.log('some')
-               handleToggle()
-            }}
+            onChange={handleToggle}
             color="primary"
             inputProps={{ 'aria-label': 'secondary checkbox' }}
+            checked={props.todo.isChecked}
          />
          <div className={classes.join(' ')}>{props.todo.title}</div>
 
@@ -56,7 +65,7 @@ const TodoItem: React.FC<ModalInterface> = (props) => {
             </Button>
             <Button
                variant={'contained'}
-               color={'default'}
+               color={'secondary'}
                onClick={removeThis}
             >
                Remove

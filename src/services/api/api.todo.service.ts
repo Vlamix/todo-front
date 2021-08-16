@@ -15,9 +15,13 @@ class ApiTodoService {
          })
    }
 
-   public async getAllTodos(token: string) {
+   public async getAllTodos() {
       return await axios
-         .get(`${this._Api_URL}`, { headers: { token: token } })
+         .get(`${this._Api_URL}`, {
+            headers: {
+               token: JSON.parse(localStorage.getItem('token') || '').token,
+            },
+         })
          .then((res) => {
             return res.data
          })
@@ -29,14 +33,9 @@ class ApiTodoService {
       })
    }
 
-   public async complete(id: number, body: any) {
-      return await axios.put(`${this._Api_URL}/${id}`, body).then((res) => {
-         return res.data
-      })
-   }
-
    public async update(id: number, body: any) {
-      return await axios.put(`${this._Api_URL}/${id}`, body).then((res) => {
+      console.log(body, 'body')
+      return await axios.patch(`${this._Api_URL}/${id}`, body).then((res) => {
          return res.data
       })
    }

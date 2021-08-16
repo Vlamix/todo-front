@@ -1,9 +1,8 @@
 import { createSlice, Dispatch } from '@reduxjs/toolkit'
-import { Todo } from '../../todos.type'
 import { TodoState } from './todo.types'
-import LocalStorageService from '../../../services/localStorageService/local.storage.service'
 import ApiTodoService from '../../../services/api/api.todo.service'
-import { registerError } from '../auth/auth.slice'
+import { AppDispatch } from '../../index'
+import { Todo } from '../../todos.type'
 
 const todoSlice = createSlice({
    name: 'todos',
@@ -11,38 +10,37 @@ const todoSlice = createSlice({
       todos: [],
    },
    reducers: {
-      //addTodo: addTodoAction,
       addTodo(state: TodoState, action) {
          state.todos.push(action.payload)
       },
-      toggleComplete(state: TodoState, action) {
-         const toggledTodo: Todo | undefined = state.todos.find(
-            (todo) => todo.id === action.payload.id
-         )
-         console.log(toggledTodo)
-         if (toggledTodo) {
-            toggledTodo.completed = !toggledTodo.completed
-         }
-         LocalStorageService.setTodos(state.todos)
+      getAllTodos(state: TodoState, action) {
+         state.todos = action.payload
       },
       removeTodo(state: TodoState, action) {
-         state.todos = state.todos.filter((todo) => todo.id !== action.payload)
-         LocalStorageService.setTodos(state.todos)
+         console.log(action.payload)
+         state.todos.splice(action.payload, 1)
       },
-      changeTodo(state: TodoState, action) {
-         const newTodo = state.todos.find(
-            (todo) => todo.id === action.payload.index
+      successToggle(state: TodoState, action) {
+         state.todos[action.payload.index].isChecked = action.payload.isChecked
+      },
+      successChange(state: TodoState, action) {
+         let changeTodo: Todo | undefined = state.todos.find(
+            (value) => value.id === action.payload.index
          )
-         if (newTodo) {
-            newTodo.title = action.payload.changeText
+         if (changeTodo) {
+            changeTodo.title = action.payload.title
          }
-         LocalStorageService.setTodos(state.todos)
       },
    },
 })
 
-export const { addTodo, toggleComplete, removeTodo, changeTodo } =
-   todoSlice.actions
+export const {
+   addTodo,
+   removeTodo,
+   successToggle,
+   getAllTodos,
+   successChange,
+} = todoSlice.actions
 
 export default todoSlice.reducer
 
@@ -52,10 +50,58 @@ export const addTodos = (data: { title: string; token: string }) => {
          const res = await ApiTodoService.createTodo(data)
          console.log(res)
          if (res === undefined) {
-            dispatch(registerError('Error'))
+            console.log('some error')
          } else {
             dispatch(addTodo(res))
          }
       } catch (e: any) {}
+   }
+}
+
+export const removeTodos = (id: number, index: number) => {
+   return async (dispatch: Dispatch): Promise<void> => {
+      try {
+         const res = await ApiTodoService.delete(id)
+         if (res === undefined) {
+            console.log('some error')
+         } else {
+            dispatch(removeTodo(index))
+         }
+      } catch (e) {}
+   }
+}
+
+export const getAll = () => {
+   return async (dispatch: Dispatch) => {
+      try {
+         const res = await ApiTodoService.getAllTodos()
+         if (res === undefined) {
+            console.log('some error')
+         } else {
+            dispatch(getAllTodos(res))
+         }
+      } catch (e) {}
+   }
+}
+
+export const changeOneTodo = (index: number, body: { title: string }) => {
+   return async (dispatch: Dispatch) => {
+      try {
+         await ApiTodoService.update(index, body)
+         dispatch(successChange({ index, title: body.title }))
+      } catch (e) {}
+   }
+}
+
+export const changeToggleTodo = (
+   index: number,
+   body: { isChecked: boolean },
+   id: number
+) => {
+   return async (dispatch: Dispatch) => {
+      try {
+         await ApiTodoService.update(id, body)
+         dispatch(successToggle({ index, isChecked: body.isChecked }))
+      } catch (e) {}
    }
 }

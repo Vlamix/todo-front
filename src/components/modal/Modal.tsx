@@ -6,12 +6,12 @@ import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogTitle from '@material-ui/core/DialogTitle'
 import { useDispatch } from 'react-redux'
-import { changeTodo } from '../redux/features/todo/todoSlice'
+import { changeOneTodo } from '../../redux/features/todo/todoSlice'
 
 interface ModalProps {
    open: boolean
    handleClose: () => void
-   index: string
+   index: number | null
 }
 
 export const Modal: React.FC<ModalProps> = (props) => {
@@ -19,9 +19,13 @@ export const Modal: React.FC<ModalProps> = (props) => {
    const [changeText, setChangeText] = useState<string>('')
 
    const Edit = () => {
-      console.log(props.index)
       const index = props.index
-      dispatch(changeTodo({ index, changeText }))
+      if (changeText.trim().length) {
+         console.log(props.index)
+         if (index !== null) {
+            dispatch(changeOneTodo(index, { title: changeText }))
+         }
+      }
       setChangeText('')
    }
 
