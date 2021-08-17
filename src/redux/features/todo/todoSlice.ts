@@ -11,10 +11,10 @@ const todoSlice = createSlice({
    },
    reducers: {
       addTodoSuccess(state: TodoState, action) {
-         state.todos.push(action.payload)
+         state.todos.push(action.payload.res)
       },
       getAllSuccess(state: TodoState, action) {
-         state.todos = action.payload
+         state.todos = action.payload.res
       },
       removeTodoSuccess(state: TodoState, action) {
          console.log(action.payload)
@@ -22,6 +22,7 @@ const todoSlice = createSlice({
       },
       successToggle(state: TodoState, action) {
          state.todos[action.payload.index].isChecked = action.payload.isChecked
+         // console.log(state.todos[action.payload.index])
       },
       successChange(state: TodoState, action) {
          let changeTodo: Todo | undefined = state.todos.find(
@@ -83,6 +84,8 @@ export const getAll = () => {
 export const changeTodo = (data: ChangeDto) => {
    return async (dispatch: Dispatch) => {
       try {
+         console.log(data.index, ' ', data.body)
+
          await ApiTodoService.update(data.index, data.body)
          dispatch(successChange({ index: data.index, title: data.body.title }))
       } catch (e) {}
@@ -92,10 +95,13 @@ export const changeTodo = (data: ChangeDto) => {
 export const changeToggleTodo = (data: ToggleDto) => {
    return async (dispatch: Dispatch) => {
       try {
+         console.log(data.id, ' ', data.body)
          await ApiTodoService.update(data.id, data.body)
          dispatch(
             successToggle({ index: data.index, isChecked: data.body.isChecked })
          )
-      } catch (e) {}
+      } catch (e) {
+         console.log(e)
+      }
    }
 }

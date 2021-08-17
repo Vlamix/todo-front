@@ -40,7 +40,12 @@ const TodoList = () => {
    }
    return (
       <>
-         <Button onClick={logoutHandler} color={'secondary'}>
+         <Button
+            onClick={logoutHandler}
+            color={'secondary'}
+            variant={'contained'}
+            style={{ margin: '2%' }}
+         >
             Exit
          </Button>
          <TextField
@@ -53,7 +58,12 @@ const TodoList = () => {
                setValue(event.target.value)
             }}
          />
-         <Button onClick={addItem} color={'inherit'}>
+         <Button
+            onClick={addItem}
+            color={'inherit'}
+            variant={'contained'}
+            style={{ margin: '2%' }}
+         >
             Save
          </Button>
          <div className={classes.TodoList}>

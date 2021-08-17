@@ -34,7 +34,6 @@ class ApiTodoService {
    }
 
    public async update(id: number, body: any) {
-      console.log(body, 'body')
       return await axios.patch(`${this._Api_URL}/${id}`, body).then((res) => {
          return res.data
       })

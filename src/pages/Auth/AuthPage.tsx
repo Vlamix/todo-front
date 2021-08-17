@@ -40,6 +40,7 @@ const Auth = () => {
                            onChange={(event) => {
                               setEmailValue(event.target.value)
                            }}
+                           style={{ marginTop: '2%' }}
                         />
                      </div>
                      <div className="input-field">
@@ -52,6 +53,7 @@ const Auth = () => {
                            onChange={(event) => {
                               setPasswordValue(event.target.value)
                            }}
+                           style={{ marginTop: '2%' }}
                         />
                      </div>
                   </div>
