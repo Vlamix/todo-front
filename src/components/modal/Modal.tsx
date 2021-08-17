@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Button from '@material-ui/core/Button'
 import TextField from '@material-ui/core/TextField'
 import Dialog from '@material-ui/core/Dialog'
@@ -12,11 +12,16 @@ interface ModalProps {
    open: boolean
    handleClose: () => void
    index: number | null
+   value: string
 }
 
 export const Modal: React.FC<ModalProps> = (props) => {
    const dispatch = useDispatch()
-   const [changeText, setChangeText] = useState<string>('')
+   const [changeText, setChangeText] = useState<string>(props.value)
+
+   useEffect(() => {
+      setChangeText(props.value)
+   }, [props.open, props.value])
 
    const Edit = () => {
       const index = props.index
@@ -39,6 +44,7 @@ export const Modal: React.FC<ModalProps> = (props) => {
             <DialogTitle id="form-dialog-title">Change yours Todo</DialogTitle>
             <DialogContent>
                <TextField
+                  placeholder="write text"
                   value={changeText}
                   onChange={(event) => setChangeText(event.target.value)}
                   autoFocus

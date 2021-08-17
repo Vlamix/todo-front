@@ -12,6 +12,7 @@ import { logoutUser } from '../../redux/features/auth/auth.slice'
 const TodoList = () => {
    const dispatch = useDispatch()
    const [value, setValue] = useState<string>('')
+   const [initialValue, setInitialValue] = useState<string>('')
    const [open, setOpen] = useState<boolean>(false)
    const [index, setIndex] = useState<number | null>(null)
 
@@ -20,7 +21,6 @@ const TodoList = () => {
    }, [dispatch])
 
    const todos = useSelector((state: RootState) => state.todos.todos)
-
    const token = useSelector((state: RootState) => state.auth.token)
 
    const handleClose = () => {
@@ -75,10 +75,16 @@ const TodoList = () => {
                      setIndex={setIndex}
                      key={`${todo.id}-todoListItem`}
                      index={index}
+                     setValue={setInitialValue}
                   />
                ))}
             </div>
-            <Modal open={open} handleClose={handleClose} index={index} />
+            <Modal
+               open={open}
+               handleClose={handleClose}
+               index={index}
+               value={initialValue}
+            />
          </div>
       </>
    )

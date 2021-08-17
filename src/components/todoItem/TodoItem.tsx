@@ -13,6 +13,7 @@ interface ModalInterface {
    todo: Todo
    setIndex: (id: number) => void
    index: number
+   setValue: (value: string) => void
 }
 
 const TodoItem: React.FC<ModalInterface> = (props) => {
@@ -58,6 +59,7 @@ const TodoItem: React.FC<ModalInterface> = (props) => {
                onClick={() => {
                   props.setOpen()
                   props.setIndex(props.todo.id)
+                  props.setValue(props.todo.title)
                }}
             >
                Change
