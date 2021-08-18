@@ -9,6 +9,7 @@ const Auth = () => {
 
    const [emailValue, setEmailValue] = useState('')
    const [passwordValue, setPasswordValue] = useState('')
+   const [nameValue, setNameValue] = useState('')
 
    const loginHandler = async () => {
       setLoading(true)
@@ -19,7 +20,11 @@ const Auth = () => {
    const registerHandler = async () => {
       setLoading(true)
       await dispatch(
-         registerUser({ email: emailValue, password: passwordValue })
+         registerUser({
+            email: emailValue,
+            password: passwordValue,
+            name: nameValue,
+         })
       )
       setLoading(false)
    }
@@ -32,6 +37,16 @@ const Auth = () => {
                   <span className="card-title black-text">Authorisation</span>
                   <div>
                      <div className="field">
+                        <TextField
+                           id="outlined-basic"
+                           label="Name"
+                           variant="outlined"
+                           value={nameValue}
+                           onChange={(event) => {
+                              setNameValue(event.target.value)
+                           }}
+                           style={{ marginTop: '2%' }}
+                        />
                         <TextField
                            id="outlined-basic"
                            label="Email"

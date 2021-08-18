@@ -2,6 +2,12 @@ import { createSlice, Dispatch } from '@reduxjs/toolkit'
 import ApiAuthServices from '../../../services/api/api.auth.services'
 import LocalStorageService from '../../../services/localStorageService/local.storage.service'
 
+export interface RegisterData {
+   email: string
+   password: string
+   name: string
+}
+
 export interface LoginData {
    email: string
    password: string
@@ -73,7 +79,7 @@ export const loginUser = (data: LoginData) => {
    }
 }
 
-export const registerUser = (data: LoginData) => {
+export const registerUser = (data: RegisterData) => {
    return async (dispatch: Dispatch) => {
       try {
          const res = await ApiAuthServices.getRegistration(data)

@@ -11,12 +11,14 @@ class ApiAuthServices {
       })
    }
 
-   public async getRegistration(body: { email: string; password: string }) {
-      return await axios
-         .post(`${this._Api_URL}/registration`, body)
-         .then((res) => {
-            return res.data
-         })
+   public async getRegistration(body: {
+      email: string
+      password: string
+      name: string
+   }) {
+      return await axios.post(`${this._Api_URL}/register`, body).then((res) => {
+         return res.data
+      })
    }
 }
 export default new ApiAuthServices()

@@ -5,7 +5,7 @@ class ApiTodoService {
 
    public async createTodo(data: any) {
       return await axios
-         .post(`${this._Api_URL}`, data, {
+         .post(`http://localhost:5000/todos`, data, {
             headers: {
                token: JSON.parse(localStorage.getItem('token') || '').token,
             },
@@ -17,7 +17,7 @@ class ApiTodoService {
 
    public async getAllTodos() {
       return await axios
-         .get(`${this._Api_URL}`, {
+         .get(`http://localhost:5000/todos`, {
             headers: {
                token: JSON.parse(localStorage.getItem('token') || '').token,
             },
@@ -28,15 +28,27 @@ class ApiTodoService {
    }
 
    public async delete(id: number) {
-      return await axios.delete(`${this._Api_URL}/${id}`).then((res) => {
-         return res.data
-      })
+      return await axios
+         .delete(`http://localhost:5000/todos/${id}`, {
+            headers: {
+               token: JSON.parse(localStorage.getItem('token') || '').token,
+            },
+         })
+         .then((res) => {
+            return res.data
+         })
    }
 
    public async update(id: number, body: any) {
-      return await axios.patch(`${this._Api_URL}/${id}`, body).then((res) => {
-         return res.data
-      })
+      return await axios
+         .patch(`http://localhost:5000/todos/${id}`, body, {
+            headers: {
+               token: JSON.parse(localStorage.getItem('token') || '').token,
+            },
+         })
+         .then((res) => {
+            return res.data
+         })
    }
 }
 export default new ApiTodoService()

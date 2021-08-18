@@ -19,14 +19,14 @@ interface ModalInterface {
 const TodoItem: React.FC<ModalInterface> = (props) => {
    const dispatch = useDispatch()
    const classes = []
-   if (props.todo.isChecked) {
+   if (props.todo.isCompleted) {
       classes.push('done')
    }
    const handleToggle = () => {
       dispatch(
          changeToggleTodo({
             index: props.index,
-            body: { isChecked: !props.todo.isChecked },
+            body: { isCompleted: !props.todo.isCompleted },
             id: props.todo.id,
          })
       )
@@ -48,7 +48,7 @@ const TodoItem: React.FC<ModalInterface> = (props) => {
             onChange={handleToggle}
             color="primary"
             inputProps={{ 'aria-label': 'secondary checkbox' }}
-            checked={props.todo.isChecked}
+            checked={props.todo.isCompleted}
          />
          <div className={classes.join(' ')}>{props.todo.title}</div>
 

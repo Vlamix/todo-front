@@ -11,17 +11,18 @@ const todoSlice = createSlice({
    },
    reducers: {
       addTodoSuccess(state: TodoState, action) {
-         state.todos.push(action.payload.res)
+         state.todos.push(action.payload.res.todo)
       },
       getAllSuccess(state: TodoState, action) {
-         state.todos = action.payload.res
+         state.todos = action.payload.res.todos
       },
       removeTodoSuccess(state: TodoState, action) {
          console.log(action.payload)
          state.todos.splice(action.payload, 1)
       },
       successToggle(state: TodoState, action) {
-         state.todos[action.payload.index].isChecked = action.payload.isChecked
+         state.todos[action.payload.index].isCompleted =
+            action.payload.isCompleted
          // console.log(state.todos[action.payload.index])
       },
       successChange(state: TodoState, action) {
@@ -48,7 +49,11 @@ export default todoSlice.reducer
 export const addTodo = (data: AddDto) => {
    return async (dispatch: Dispatch): Promise<void> => {
       try {
-         const res = await ApiTodoService.createTodo(data)
+         const res = await ApiTodoService.createTodo({
+            title: data.title,
+            description: 'some',
+            isCompleted: false,
+         })
          console.log(res)
          if (res === undefined) {
             console.log('some error')
@@ -72,6 +77,7 @@ export const getAll = () => {
    return async (dispatch: Dispatch) => {
       try {
          const res = await ApiTodoService.getAllTodos()
+         console.log(res)
          if (res === undefined) {
             console.log('some error')
          } else {
@@ -98,7 +104,10 @@ export const changeToggleTodo = (data: ToggleDto) => {
          console.log(data.id, ' ', data.body)
          await ApiTodoService.update(data.id, data.body)
          dispatch(
-            successToggle({ index: data.index, isChecked: data.body.isChecked })
+            successToggle({
+               index: data.index,
+               isCompleted: data.body.isCompleted,
+            })
          )
       } catch (e) {
          console.log(e)

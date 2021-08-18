@@ -10,7 +10,7 @@ export interface RemoveDto {
 
 export interface ToggleDto {
    index: number
-   body: { isChecked: boolean }
+   body: { isCompleted: boolean }
    id: number
 }
 
