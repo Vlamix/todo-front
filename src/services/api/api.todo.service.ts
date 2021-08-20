@@ -39,4 +39,5 @@ class ApiTodoService {
       })
    }
 }
+// @ts-ignore
 export default new ApiTodoService()

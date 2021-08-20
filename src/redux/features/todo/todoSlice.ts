@@ -17,8 +17,7 @@ const todoSlice = createSlice({
          state.todos = action.payload.res
       },
       removeTodoSuccess(state: TodoState, action) {
-         console.log(action.payload)
-         state.todos.splice(action.payload, 1)
+         state.todos.splice(action.payload.index, 1)
       },
       successToggle(state: TodoState, action) {
          state.todos[action.payload.index].isChecked = action.payload.isChecked
