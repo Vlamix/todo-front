@@ -1,0 +1,74 @@
+import React, { useEffect, useState } from 'react'
+import Button from '@material-ui/core/Button'
+import TextField from '@material-ui/core/TextField'
+import Dialog from '@material-ui/core/Dialog'
+import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import { useDispatch } from 'react-redux'
+import { changeTodo } from '../../redux/features/todo/todoSlice'
+
+interface ModalProps {
+   open: boolean
+   handleClose: () => void
+   index: number | null
+   value: string
+}
+
+export const Modal: React.FC<ModalProps> = (props) => {
+   const dispatch = useDispatch()
+   const [changeText, setChangeText] = useState<string>(props.value)
+
+   useEffect(() => {
+      setChangeText(props.value)
+   }, [props.open, props.value])
+
+   const Edit = () => {
+      const index = props.index
+      if (changeText.trim().length) {
+         console.log(props.index)
+         if (index !== null) {
+            dispatch(changeTodo({ index: index, body: { title: changeText } }))
+         }
+      }
+      setChangeText('')
+   }
+
+   return (
+      <div>
+         <Dialog
+            open={props.open}
+            onClose={props.handleClose}
+            aria-labelledby="form-dialog-title"
+         >
+            <DialogTitle id="form-dialog-title">Change yours Todo</DialogTitle>
+            <DialogContent>
+               <TextField
+                  placeholder="write text"
+                  value={changeText}
+                  onChange={(event) => setChangeText(event.target.value)}
+                  autoFocus
+                  margin="dense"
+                  id="name"
+                  type="email"
+                  fullWidth
+               />
+            </DialogContent>
+            <DialogActions>
+               <Button onClick={props.handleClose} color="primary">
+                  Cancel
+               </Button>
+               <Button
+                  onClick={() => {
+                     props.handleClose()
+                     Edit()
+                  }}
+                  color="primary"
+               >
+                  Change
+               </Button>
+            </DialogActions>
+         </Dialog>
+      </div>
+   )
+}

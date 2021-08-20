@@ -1,0 +1,11 @@
+body {
+   margin: 0;
+}
+
+.row .col.offset-s3 {
+   width: 90%;
+   position: center;
+   margin: auto;
+   padding-left: 10%;
+   padding-top: 10%;
+}
